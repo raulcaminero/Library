@@ -40,7 +40,8 @@
     <!-- ============================================================== -->
     <!-- Main wrapper - style you can find in pages.scss -->
     <!-- ============================================================== -->
-    <section id="wrapper" class="login-register login-sidebar" style="background-image:url(webapp/plantilla/assets/images/uni2.jpeg);background-size: 85%; background-position: left top;">
+    <section id="wrapper" class="login-register login-sidebar" style="background-image: url(plantilla/assets/images/wall-bookshelf-60-x-15-cm-set-of-4.jpg);background-size: 80%;
+        background-position: center left;">
             <div class="login-box card">
                 <div class="card-body">
                     <form class="form-horizontal form-material text-left" id="loginform" method="post">
@@ -65,11 +66,13 @@
                     }
                         <div class="form-group m-t-40">
                             <div class="col-xs-12">
+                                <label>Email</label>
                                 <input class="form-control" type="email" name="email" required="" placeholder="Correo">
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-xs-12">
+                                <label>Contraseña</label>
                                 <input class="form-control" type="password" name="password" required="" placeholder="Contraseña">
                             </div>
                         </div>
@@ -113,7 +116,7 @@
                         </div>
                     </form>
                     <br />
-                    @if (ViewBag.ServiceTypes.Count > 0)
+                    @*@if (ViewBag.ServiceTypes.Count > 0)
                 {
                     <p>
                         Requisitos Básicos
@@ -129,7 +132,7 @@
                             }
                         }
                     </p>
-                }
+                }*@
                 </div>
             </div>
         </section>
