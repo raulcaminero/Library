@@ -32,6 +32,9 @@ namespace WebApp.Models
 		public virtual DbSet<Archivo> Archivos { get; set; }
 		public virtual DbSet<ArchivoSolicitud> ArchivosSolicitudes { get; set; }
 		public virtual DbSet<Proyecto> Proyecto { get; set; }
+		public virtual DbSet<Book> Book { get; set; }
+		public virtual DbSet<BookPages> BookPages { get; set; }
+
 
 		protected override void OnModelCreating(ModelBuilder modelBuilder)
 		{
@@ -301,8 +304,6 @@ namespace WebApp.Models
 			modelBuilder.Entity<ArchivoSolicitud>()
 				.HasKey(x => new { x.IdArchivo, x.IdSolicitud });
 		}
-
-
 	}
 
 }

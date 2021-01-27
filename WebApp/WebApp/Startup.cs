@@ -24,13 +24,13 @@ namespace WebApp
 			services.AddControllersWithViews()
 				.AddRazorRuntimeCompilation();
 
-			services.AddAuthentication("CookieAuth")
-						.AddCookie("CookieAuth", op =>
-						{
-							op.LoginPath = "/account/login";
-						});
+            services.AddAuthentication("CookieAuth")
+                        .AddCookie("CookieAuth", op =>
+                        {
+                            op.LoginPath = "/account/login";
+                        });
 
-			services.AddSession();
+            services.AddSession();
 
 			services.AddDbContext<Models.ApplicationDbContext>(op =>
 			{
@@ -68,7 +68,7 @@ namespace WebApp
 			{
 				endpoints.MapControllerRoute(
 					name: "default",
-					pattern: "{controller=Account}/{action=Login}/{id?}");
+					pattern: "{controller=Books}/{action=Index}/{id?}");
 			});
 		}
 	}

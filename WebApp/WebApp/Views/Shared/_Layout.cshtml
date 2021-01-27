@@ -1,4 +1,9 @@
-﻿<!DOCTYPE html>
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -27,7 +32,7 @@
         </div>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
 
-            <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Library</a>
+            <a class="navbar-brand" style="padding-left: 47%;" asp-area="" asp-controller="Home" asp-action="Index"><h4>Library</h4></a>
             <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
@@ -46,14 +51,20 @@
                 </li>
 
                 @*<li class="nav-item">
-                        <img class="rounded-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRpYhZKw5Ww7Tg_9YFAB63f-x5NHb0vTpANQ&usqp=CAU" alt="" width="30" height="24">
-                    </li>*@
-
-                <li class="nav-item">
-                    <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">sign out</a>
-                </li>
-
-            </ul>
+            <img class="rounded-circle" src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSRpYhZKw5Ww7Tg_9YFAB63f-x5NHb0vTpANQ&usqp=CAU" alt="" width="30" height="24">
+        </li>*@
+                @if (!(User.Identity.Name is null))
+                {
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">sign out</a>
+                    </li>
+                }
+                else { 
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Account" asp-action="Login">sign in</a>
+                    </li>
+                }
+                </ul>
         </nav>
     </header>
 
@@ -69,7 +80,7 @@
                                         <i class="icon fa fa-graduation-cap fa-fw mr-3" aria-hidden="true"></i>
                                     </span>
                                     <span class="media-body font-weight-bold">
-                                        <span class="media-body ">Monográfico</span>
+                                        <span class="media-body ">Menu</span>
                                     </span>
                                 </div>
                             </div>
@@ -103,8 +114,8 @@
                             </a>
                         </li>
                     }
-                    
-                    <li>
+
+                    @*<li>
                         <a class="list-group-item list-group-item-action " asp-controller="Modulo" asp-action="Index">
                             <div class="ml-0">
                                 <div class="media">
@@ -115,7 +126,33 @@
                                 </div>
                             </div>
                         </a>
+                    </li>*@
+
+                    <li>
+                        <a class="list-group-item list-group-item-action " asp-controller="Books" asp-action="Index">
+                            <div class="ml-0">
+                                <div class="media">
+                                    <span class="media-left">
+                                        <i style="color:lightskyblue" class="icon fa fa-box fa-fw  mr-3" aria-hidden="true"></i>
+                                    </span>
+                                    <span class="media-body ">Books</span>
+                                </div>
+                            </div>
+                        </a>
                     </li>
+
+                    @*<li>
+                        <a class="list-group-item list-group-item-action " asp-controller="Carreras" asp-action="Index">
+                            <div class="ml-0">
+                                <div class="media">
+                                    <span class="media-left">
+                                        <i style="color:lightskyblue" class="icon fa fa-running fa-fw  mr-3" aria-hidden="true"></i>
+                                    </span>
+                                    <span class="media-body ">Carreras</span>
+                                </div>
+                            </div>
+                        </a>
+                    </li>*@
 
                     @if (User.IsInRole("Administrador") || User.IsInRole("Profesor"))
                     {
@@ -224,32 +261,24 @@
                     }
 
                 </ul>
-                    </nav >
-                    </div >
-                    <div class= "col-lg-10 col-md-6">
+            </nav>
+        </div>
+        <div class="col-lg-10 col-md-6">
 
 
-                    @RenderBody()
+            @RenderBody()
 
 
-                    </div>
+        </div>
 
-                    </div>
+    </div>
 
-
-                    @*      lol   *@
-
-
-
-                    <!--<script src="~/plantilla/lib/jquery/dist/jquery.min.js"></script>
-                    <script src="~/plantilla/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-                    <script src="~/plantilla/js/site.js" asp-append-version="true"></script>-->
-                    <script src="~/js/jquery-3.2.1.min.js"></script>
-                    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
-                    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
-                    <script src="~/lib/yadcf/dist/jquery.dataTables.yadcf.js"></script>
-                    <script src="~/js/site.js" asp-append-version="true"></script>
-                    @RenderSection("Scripts", required: false)
+    <script src="~/js/jquery-3.2.1.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.min.js"></script>
+    <script src="~/lib/yadcf/dist/jquery.dataTables.yadcf.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @RenderSection("Scripts", required: false)
 
 
 </body>
