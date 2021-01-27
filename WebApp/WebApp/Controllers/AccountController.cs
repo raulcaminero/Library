@@ -1,21 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Mail;
 using System.Security.Claims;
 using System.Security.Principal;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.EntityFrameworkCore;
 using WebApp.Models;
 
 namespace WebApp.Controllers
 {
-	public class AccountController : BaseController
+    public class AccountController : BaseController
 	{
 		private readonly ApplicationDbContext _context;
 
@@ -26,11 +24,8 @@ namespace WebApp.Controllers
 
 
 		[HttpGet]
-		public async Task<ActionResult> Registro()
+		public ActionResult Registro()
 		{
-			ViewBag.Roles = new SelectList(_context.Rol.ToList(), "Id", "Descripcion");
-			ViewBag.Campus = new SelectList(_context.Campus.ToList(), "Id", "Nombre");
-
 			return View();
 		}
 		[HttpPost]
@@ -44,33 +39,19 @@ namespace WebApp.Controllers
 												 string tipo_identificacion,
 												 string identificacion,
 												 string sexo,
-												 string matricula,
-												 int campus,
 												 string EstadoId)
 		{
-
-			// consultado en la base de datos par ver si el correo existe
 
 			var usuario = await _context.usuarios.FirstOrDefaultAsync(x => x.Email == email);
 			if (usuario == null)
 			{
-				// Determinar el estado del usuario.
-				// Si es un Estudiante queda como "Activo" (A).
-				// Si no queda como "En proceso" (P)
-
-				var rolEstudiante = _context.Rol.FirstOrDefault(r => r.Descripcion == "Estudiante");
-				if (rolEstudiante == null)
-					throw new Exception("No se encontró el rol 'Estudiante' en la base de datos.");
 
 				var estadoId = "A";
-				if (rolEstudiante.Id != RolID)
-					estadoId = "P"; // En proceso, requiere autorizacion del administrador.
 
 				usuario = new Usuario()
 				{
 					Email = email,
 					contrasena = password,
-					RolID = RolID,
 					primer_nombre = primer_nombre,
 					segundo_nombre = segundo_nombre,
 					primer_apellido = primer_apellido,
@@ -78,8 +59,6 @@ namespace WebApp.Controllers
 					tipo_identificacion = tipo_identificacion,
 					identificacion = identificacion,
 					sexo = sexo,
-					matricula = matricula,
-					IdCampus = campus,
 					EstadoId = estadoId
 				};
 
@@ -103,56 +82,41 @@ namespace WebApp.Controllers
 		}
 		// GET: AccountController
 		[HttpGet]
-		public ActionResult Login()
+		public async Task<ActionResult> Login()
 		{
-			LogOff();
-
-			loadReqs();
+			await LogOff();
 
 			return View();
 		}
 		[HttpPost]
 		public async Task<ActionResult> Login(string email, string password)
 		{
-			// var usuario = _context.usuarios1.SingleOrDefault(x => x.nombre == nombre);
 			var usr = await _context.usuarios
 				.Where(u => u.Email == email && u.EstadoId != "E")
-				.Include(u => u.Rol)
 				.FirstOrDefaultAsync();
 
-			//var usuario = _context.usuarios1.SingleOrDefault(x => x.nombre == nombre);
 			if (usr == null)
 			{
 				ViewBag.Login = "El usuario indicado no existe";
-				loadReqs();
 				return View();
 			}
-			else if (usr.EstadoId == "P")
-			{
-				ViewBag.Login = "Su usuario está siendo revisado";
-				loadReqs();
-				return View();
-			}
+			
 			if (usr.contrasena.Equals(password))
 			{
 				var claims = new[] {
 					new Claim(ClaimTypes.NameIdentifier,email),
 					new Claim(ClaimTypes.Name, usr.primer_nombre),
-					new Claim(ClaimTypes.Role, usr.Rol.Descripcion)
 				};
 
 				var identity = new ClaimsIdentity(claims, "CookieAuth");
 				var principal = new ClaimsPrincipal(identity);
 				await HttpContext.SignInAsync("CookieAuth", principal);
 
-				//GeneralPurpose.Ruta = usr.RutaFoto == null? "avatar.jpg" : usr.RutaFoto;
-
-				return RedirectToAction("Index", "Home");
+				return RedirectToAction("Index", "Books");
 			}
 
 
 			ViewBag.Login = "Contraseña incorrecta";
-			loadReqs();
 			return View();
 		}
 
@@ -169,14 +133,14 @@ namespace WebApp.Controllers
 
 
 			MailMessage Correo = new MailMessage();
-			Correo.From = new MailAddress("culminare.v2@gmail.com");
+			Correo.From = new MailAddress("Library@gmail.com");
 			Correo.To.Add(correo);
-			Correo.Subject = ("Bienvenido a  Culminare");
-			Correo.Body = "Saludos, Te damos la Bienvenida a Culminare:" + "     " + nombre;
+			Correo.Subject = ("Bienvenido a  Library");
+			Correo.Body = "Saludos, Te damos la Bienvenida a Library:" + "     " + nombre;
 			Correo.Priority = MailPriority.Normal;
 
 			SmtpClient ServerEmail = new SmtpClient();
-			ServerEmail.Credentials = new NetworkCredential("culminare.v2@gmail.com", "UASD1538");
+			ServerEmail.Credentials = new NetworkCredential("Library@gmail.com", "Library1538");
 			ServerEmail.Host = "smtp.gmail.com";
 			ServerEmail.Port = 587;
 			ServerEmail.EnableSsl = true;
@@ -199,51 +163,25 @@ namespace WebApp.Controllers
 
 			var currentUser = context.usuarios
 				.Where(u => u.EstadoId != "I")
-				.Include(u => u.Rol)
 				.FirstOrDefault(u => u.Email == email);
 
 			return currentUser;
 		}
 
-		public static bool GetUsuarioEsAdministrador(IPrincipal user, ApplicationDbContext context)
-		{
-			var usr = GetCurrentUser(user, context);
-			var rol = usr.Rol?.Descripcion?.ToLower();
-			var esAdmin = (rol == "administrador");
-			return esAdmin;
-		}
-
 		[HttpPost]
-		public async Task<IActionResult> Modal(string serviceType, string school)
+		public IActionResult Modal(string serviceType, string school)
 		{
 			if (serviceType != null && school != null)
             {
 				int tipoServicioId = int.Parse(serviceType);
 				int escuelaId = int.Parse(school);
 
-				var requerimiento = await _context.Requerimientos
-					.Where(r => r.Estado == EstadoRequerimiento.Activo && r.TipoServicioId == tipoServicioId && r.EscuelaId == escuelaId)
-					.FirstOrDefaultAsync();
-
-				var archivosController = new ArchivosController(_context);
-
-				if (requerimiento != null)
-					return await archivosController.Descargar(requerimiento.ArchivoId);
-
 				ViewBag.ErrorMessage = "No existen requerimientos para esta escuela";
-				loadReqs();
 				return View("Login");
 			}
 
 			return RedirectToAction("Login");
 		}
-
-		private void loadReqs ()
-        {
-			ViewBag.ServiceTypes = _context.TipoServicios.ToList();
-
-			var schools = _context.Escuelas.ToList();
-			ViewBag.Schools = new SelectList(schools, "Id", "Nombre");
-		}
+		
 	}
 }

@@ -194,14 +194,14 @@
                 $("#service-type").val($(this).attr("id"));
             });
 
-            $("#loginModal").on("show.bs.modal", function ()
+            @*$("#loginModal").on("show.bs.modal", function ()
             {
                 if (@ViewBag.Schools.Items.Count == 0)
                 {
                     $("#modalSubmit").attr("disabled", true);
                     $("#errorMessage").html("No hay escuelas disponibles");
                 }
-            });
+            });*@
 
             $("#loginModal").on("hide.bs.modal", function ()
             {

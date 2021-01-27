@@ -11,12 +11,6 @@ namespace WebApp.Models
 {
     public class Usuario 
     {
-        public Usuario()
-        {
-            Calificaciones = new HashSet<Calificaciones>();
-            Solicitudes = new HashSet<SolicitudServicio>();
-        }
-
         [Key]
         [DisplayName("Codigo")]
         public int codigo { set; get; }
@@ -51,9 +45,6 @@ namespace WebApp.Models
         public string sexo { set; get; }
         public string Sexo => sexo == "M" ? "Masculino" : "Femenino";
 
-		[Display(Name = "Matrícula")]
-        public string matricula { set; get; }
-
         [MaxLength(30)]
         public string contacto { get; set; }
 
@@ -65,14 +56,6 @@ namespace WebApp.Models
 //añadiendo RutaFoto
         public string? RutaFoto { set; get; }
         //tabla intermedia para calificaciones, profesores en modulos, servicios y de estudiantes
-        public int? IdCampus { set; get; }
-        [ForeignKey("IdCampus")]
-		public Campus Campus { get; set; }
-
-		public int RolID { get; set; }
-        
-        public virtual Rol Rol { get; set; }
-
         public string EstadoId { set; get; }
 
         public virtual Estado Estado { get; set; }
@@ -82,13 +65,6 @@ namespace WebApp.Models
         {
             get { return primer_nombre.Trim() + " " + primer_apellido; }
         }
-
-        //tabla intermedia para calificaciones, profesores en modulos, servicios y de estudiantes
-        public virtual ICollection<Calificaciones> Calificaciones { get; set; }
-        
-        public virtual ICollection<Modulo> Modulo { get; set; }
-        
-        public virtual ICollection<SolicitudServicio> Solicitudes { get; set; }
 
         public override string ToString() => Email;
 	}

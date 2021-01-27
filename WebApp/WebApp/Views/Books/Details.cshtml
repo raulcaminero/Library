@@ -25,6 +25,9 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Pages" asp-route-id="@Model.Id">Pages</a> |
+    @if (!(User.Identity.Name is null))
+    {
+    <a asp-action="Pages" asp-route-id="@Model.Id">Pages |</a> 
+    }
     <a asp-action="Index">Back to List</a>
 </div>
