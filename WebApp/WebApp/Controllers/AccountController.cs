@@ -167,21 +167,5 @@ namespace WebApp.Controllers
 
 			return currentUser;
 		}
-
-		[HttpPost]
-		public IActionResult Modal(string serviceType, string school)
-		{
-			if (serviceType != null && school != null)
-            {
-				int tipoServicioId = int.Parse(serviceType);
-				int escuelaId = int.Parse(school);
-
-				ViewBag.ErrorMessage = "No existen requerimientos para esta escuela";
-				return View("Login");
-			}
-
-			return RedirectToAction("Login");
-		}
-		
 	}
 }

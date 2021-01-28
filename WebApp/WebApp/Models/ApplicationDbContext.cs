@@ -1,11 +1,8 @@
-﻿using System;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-using WebApp.Models;
+﻿using Microsoft.EntityFrameworkCore;
 
 namespace WebApp.Models
 {
-	public class ApplicationDbContext : DbContext
+    public class ApplicationDbContext : DbContext
 	{
 		public ApplicationDbContext()
 		{

@@ -1,11 +1,7 @@
-﻿using Microsoft.AspNetCore.Identity;
-using System;
-using System.Collections.Generic;
+﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace WebApp.Models
 {
@@ -52,12 +48,8 @@ namespace WebApp.Models
         public string nacionalidad { get; set; }
 
         public DateTime? fecha_nacimiento { get; set; }
-
-//añadiendo RutaFoto
         public string? RutaFoto { set; get; }
-        //tabla intermedia para calificaciones, profesores en modulos, servicios y de estudiantes
         public string EstadoId { set; get; }
-
         public virtual Estado Estado { get; set; }
 
         [NotMapped]
@@ -65,7 +57,6 @@ namespace WebApp.Models
         {
             get { return primer_nombre.Trim() + " " + primer_apellido; }
         }
-
         public override string ToString() => Email;
 	}
 }
